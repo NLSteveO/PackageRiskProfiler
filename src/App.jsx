@@ -7,6 +7,35 @@ const getNpmsScores = (pkg, setScore) => {
     .then(response => response.json().then(blah => setScore({[pkg]: blah.score})));
 };
 
+const RenderList = ({scores}) => {
+    return (
+        <table>
+            <thead>
+                <tr>
+                    <td>Dependency</td>
+                    <td>Final</td>
+                    <td>Quality</td>
+                    <td>Popularity</td>
+                    <td>Maintenance</td>
+                </tr>
+            </thead>
+            {Object.keys(scores).map(score => {
+                return(
+                    <tbody key={score}>
+                        <tr>
+                            <td>{score}</td>
+                            <td>{Math.round(scores[score].final * 100)}</td>
+                            <td>{Math.round(scores[score].detail.quality * 100)}</td>
+                            <td>{Math.round(scores[score].detail.popularity * 100)}</td>
+                            <td>{Math.round(scores[score].detail.maintenance * 100)}</td>
+                        </tr>
+                    </tbody>
+                );
+            })}
+        </table>
+    );
+}
+
 function App() {
   const [count, setCount] = useState(0);
   const [pkg, setPackage] = useState('');
@@ -37,6 +66,7 @@ function App() {
         <label>Package Name: </label>
         <input onChange={updatePackage} />
         <button onClick={submit} >Check</button>
+        <RenderList scores={score} />
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
