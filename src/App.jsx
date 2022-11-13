@@ -6,6 +6,10 @@ const getNpmsScores = (pkg, setScore) => {
     .then(response => response.json().then(blah => setScore({[pkg]: blah.score})));
 };
 
+const formatScore = score => {
+    return (Math.round(score * 1000)/10).toFixed(1);
+};
+
 const RenderList = ({scores}) => {
     return (
         <table>
@@ -19,14 +23,15 @@ const RenderList = ({scores}) => {
                 </tr>
             </thead>
             {Object.keys(scores).map(score => {
+                const { detail, final } = scores[score];
                 return(
                     <tbody key={score}>
                         <tr>
                             <td>{score}</td>
-                            <td>{Math.round(scores[score].final * 100)}</td>
-                            <td>{Math.round(scores[score].detail.quality * 100)}</td>
-                            <td>{Math.round(scores[score].detail.popularity * 100)}</td>
-                            <td>{Math.round(scores[score].detail.maintenance * 100)}</td>
+                            <td>{formatScore(final)}%</td>
+                            <td>{formatScore(detail.quality)}%</td>
+                            <td>{formatScore(detail.popularity)}%</td>
+                            <td>{formatScore(detail.maintenance)}%</td>
                         </tr>
                     </tbody>
                 );
