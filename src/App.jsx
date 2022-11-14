@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './App.css';
 
-const getListOfPackages = packages => packages.split(',');
+const getListOfPackages = packages => packages.split(',').map(pkg => pkg.trim());
 
 const getNpmsScore = (pkg, setScores) => {
     fetch('http://api.npms.io/v2/package/' + pkg)
@@ -20,7 +20,14 @@ const formatScore = score => {
     return (Math.round(score * 1000)/10).toFixed(1);
 };
 
+const sortScores = scores => {
+    const scoresList = Object.keys(scores).map(score => [score, scores[score].final, scores[score].detail]);
+    scoresList.sort((a, b) => b[1] - a[1]);
+    return scoresList;
+};
+
 const RenderList = ({scores}) => {
+    const sortedScores = sortScores(scores);
     return (
         <table>
             <thead>
@@ -32,12 +39,11 @@ const RenderList = ({scores}) => {
                     <td>Maintenance</td>
                 </tr>
             </thead>
-            {Object.keys(scores).map(score => {
-                const { detail, final } = scores[score];
+            {sortedScores.map(([pkg, final, detail]) => {
                 return(
-                    <tbody key={score}>
+                    <tbody key={pkg}>
                         <tr>
-                            <td>{score}</td>
+                            <td>{pkg}</td>
                             <td>{formatScore(final)}%</td>
                             <td>{formatScore(detail.quality)}%</td>
                             <td>{formatScore(detail.popularity)}%</td>
