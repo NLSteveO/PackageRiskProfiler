@@ -3,7 +3,7 @@ import './App.css';
 
 const getNpmsScore = (pkg, setScores) => {
     fetch('http://api.npms.io/v2/package/' + pkg)
-    .then(response => response.json().then(npmsInfo => setScores({[pkg]: npmsInfo.score})));
+    .then(response => response.json().then(npmsInfo => setScores(scores => ({ ...scores, [pkg]: npmsInfo.score }))));
 };
 
 const formatScore = score => {
