@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import './App.css';
 
-const getNpmsScores = (pkg, setScore) => {
+const getNpmsScore = (pkg, setScores) => {
     fetch('http://api.npms.io/v2/package/' + pkg)
-    .then(response => response.json().then(blah => setScore({[pkg]: blah.score})));
+    .then(response => response.json().then(npmsInfo => setScores({[pkg]: npmsInfo.score})));
 };
 
 const formatScore = score => {
@@ -41,10 +41,10 @@ const RenderList = ({scores}) => {
 }
 
 function App() {
-  const [pkg, setPackage] = useState('');
-  const [score, setScore] = useState({});
+  const [pkgs, setPackage] = useState('');
+  const [scores, setScores] = useState({});
   const updatePackage = evt => setPackage(evt.target.value);
-  const submit = () => getNpmsScores(pkg, setScore);
+  const submit = () => getNpmsScore(pkgs, setScores);
 
   return (
     <div className="App">
@@ -53,7 +53,7 @@ function App() {
         <label>Package Name: </label>
         <input onChange={updatePackage} />
         <button onClick={submit} >Check</button>
-        <RenderList scores={score} />
+        <RenderList scores={scores} />
       </div>
     </div>
   );
