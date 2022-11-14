@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import './App.css';
 
+const getListOfPackages = packages => packages.split(',');
+
 const getNpmsScore = (pkg, setScores) => {
     fetch('http://api.npms.io/v2/package/' + pkg)
     .then(response => {
@@ -52,7 +54,7 @@ function App() {
   const [pkgs, setPackage] = useState('');
   const [scores, setScores] = useState({});
   const updatePackage = evt => setPackage(evt.target.value);
-  const submit = () => getNpmsScore(pkgs, setScores);
+  const submit = () => getListOfPackages(pkgs).forEach(pkg => getNpmsScore(pkg, setScores));
 
   return (
     <div className="App">
